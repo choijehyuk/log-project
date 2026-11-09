@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Java / Spring Boot
+BE/maple-log/build/
+BE/maple-log/.gradle/
+BE/maple-log/out/
+BE/maple-log/*.jar
+BE/maple-log/HELP.md
+BE/maple-log/.classpath
+BE/maple-log/.project
+BE/maple-log/.settings/
+
+# Node / React
+FE/maple-log/node_modules/
+FE/maple-log/dist/
+FE/maple-log/.env
+FE/maple-log/.env.local
+
+# Logs
+*.log

@@ -1,0 +1,9 @@
+{
+  "name": "MapleLog",
+  "short_name": "MapleLog",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#f08c00",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
