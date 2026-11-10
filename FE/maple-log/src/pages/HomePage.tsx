@@ -1,20 +1,11 @@
-import { useEffect, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { equipmentApi } from '../api/equipment'
 import { characterApi } from '../api/character'
 import type { CharacterResponse } from '../types/character'
 import type { EquipmentItem } from '../types/equipment'
+import EquipTooltip from '../components/equipment/EquipTooltip'
 
-// 인게임 장비창 기준 7열 × 6행 배치 { col, row } — 슬롯명은 Nexon API item_equipment_slot 값
-// 가운데 3~5열 × 1~4행은 캐릭터 이미지 자리
-//
-// 반지4  얼굴장식  [캐릭터 이미지]           모자      망토
-// 반지3  눈장식    [            ]           상의      장갑
-// 반지2  귀고리    [            ]           하의      신발
-// 반지1  펜던트    [            ]           어깨장식  훈장
-// 벨트   펜던트2   무기  보조무기  엠블렘   안드로이드 기계 심장
-// 포켓                                      칭호      뱃지
 const EQUIP_LAYOUT: Record<string, { col: number; row: number }> = {
-  // 인게임은 아래에서 위로 반지1 → 반지4 (식중땐 프리셋 2로 API와 대조해 확인)
   '반지4':       { col: 1, row: 1 },
   '반지3':       { col: 1, row: 2 },
   '반지2':       { col: 1, row: 3 },
@@ -47,16 +38,28 @@ const EQUIP_LAYOUT: Record<string, { col: number; row: number }> = {
   '뱃지':        { col: 7, row: 6 },
 }
 
-function EquipSlot({ slot, item, style }: {
+function EquipSlot({ slot, item, style, onActivate, onDeactivate }: {
   slot: string
   item?: EquipmentItem
   style?: CSSProperties
+  onActivate?: (item: EquipmentItem, rect: DOMRect) => void
+  onDeactivate?: () => void
 }) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  const activate = () => {
+    if (item && ref.current) onActivate?.(item, ref.current.getBoundingClientRect())
+  }
+
   return (
     <div
+      ref={ref}
       className={item ? 'equip-slot equipped' : 'equip-slot'}
       style={style}
-      title={item ? `${slot} · ${item.name}` : slot}
+      title={item ? undefined : slot}
+      onMouseEnter={activate}
+      onMouseLeave={onDeactivate}
+      onClick={activate}
     >
       {item ? (
         <>
@@ -73,33 +76,54 @@ function EquipSlot({ slot, item, style }: {
 function EquipGrid({ characterId, characterImage }: { characterId: number; characterImage: string }) {
   const [items, setItems] = useState<EquipmentItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [preset, setPreset] = useState<1 | 2 | 3>(1)
+  const [tooltip, setTooltip] = useState<{ item: EquipmentItem; rect: DOMRect } | null>(null)
 
   useEffect(() => {
     setLoading(true)
-    equipmentApi.getEquipment(characterId)
+    setTooltip(null)
+    equipmentApi.getEquipment(characterId, preset)
       .then(({ data }) => setItems(data))
       .catch(() => setItems([]))
       .finally(() => setLoading(false))
-  }, [characterId])
-
-  if (loading) return <p className="loading">장비 불러오는 중...</p>
+  }, [characterId, preset])
 
   const slotMap = new Map(items.map((i) => [i.slot, i]))
 
   return (
-    <div className="equip-grid">
-      <div className="equip-portrait">
-        <img src={characterImage} alt="캐릭터" />
+    <>
+      <div className="preset-tabs">
+        {([1, 2, 3] as const).map((p) => (
+          <button
+            key={p}
+            className={`preset-tab${preset === p ? ' active' : ''}`}
+            onClick={() => setPreset(p)}
+          >
+            프리셋 {p}
+          </button>
+        ))}
       </div>
-      {Object.entries(EQUIP_LAYOUT).map(([slot, pos]) => (
-        <EquipSlot
-          key={slot}
-          slot={slot}
-          item={slotMap.get(slot)}
-          style={{ gridColumn: pos.col, gridRow: pos.row }}
-        />
-      ))}
-    </div>
+      {loading && <p className="loading" style={{ padding: '24px 0' }}>불러오는 중...</p>}
+      <div className="equip-grid" style={loading ? { opacity: 0.4, pointerEvents: 'none' } : undefined}>
+        <div className="equip-portrait">
+          <img src={characterImage} alt="캐릭터" />
+        </div>
+        {Object.entries(EQUIP_LAYOUT).map(([slot, pos]) => (
+          <EquipSlot
+            key={slot}
+            slot={slot}
+            item={slotMap.get(slot)}
+            style={{ gridColumn: pos.col, gridRow: pos.row }}
+            onActivate={(item, rect) => setTooltip({ item, rect })}
+            onDeactivate={() => setTooltip(null)}
+          />
+        ))}
+      </div>
+
+      {tooltip && (
+        <EquipTooltip item={tooltip.item} anchorRect={tooltip.rect} />
+      )}
+    </>
   )
 }
 

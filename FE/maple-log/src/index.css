@@ -156,6 +156,100 @@ body {
 }
 .equip-slot-name { font-size: 9px; color: var(--text2); text-align: center; line-height: 1.2; }
 
+/* 장비 tooltip — 인게임 장비 상세 */
+.equip-tooltip {
+  position: fixed;
+  z-index: 301;
+  background: rgba(0, 0, 0, 0.94);
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #fff;
+  pointer-events: none;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.7);
+}
+.tt-header { text-align: center; padding-bottom: 10px; }
+.tt-stars { display: flex; flex-direction: column; align-items: center; gap: 1px; margin-bottom: 4px; }
+.tt-star-row { display: flex; }
+.tt-star { font-size: 15px; line-height: 1; color: transparent; -webkit-text-stroke: 1px #d8d8d8; }
+.tt-star.filled { color: #ffcc33; -webkit-text-stroke: 0; }
+.tt-star.group-end { margin-right: 5px; }
+.tt-star.group-end:last-child { margin-right: 0; }
+.tt-name { font-size: 17px; font-weight: 700; margin-top: 2px; }
+.tt-grade { font-size: 12px; color: #999; margin-top: 2px; }
+.tt-section {
+  border-top: 1px dashed #555;
+  padding: 10px 0 4px;
+}
+.tt-section:last-child { padding-bottom: 0; }
+.tt-icon {
+  width: 72px;
+  height: 72px;
+  border: 3px solid #666;
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+.tt-icon img { width: 70%; height: 70%; object-fit: contain; image-rendering: pixelated; }
+.tt-line { color: #fff; }
+.tt-stat { color: #fff; }
+.tt-stat.enhanced { color: #66ffff; }
+.tt-breakdown { color: #fff; }
+.tt-v-base { color: #fff; }
+.tt-v-starforce { color: #ffcc00; }
+.tt-v-etc { color: #aaaaff; }
+.tt-v-add { color: #ccff00; }
+.tt-v-exceptional { color: #ff6699; }
+.tt-pot-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.tt-grade-badge {
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  color: #1a1a1a;
+  font-size: 11px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.tt-soul { color: #ffcc00; }
+.tt-cuttable { color: #ff9933; font-size: 12px; margin-top: 2px; }
+
+/* 장비 프리셋 탭 */
+.preset-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.preset-tab {
+  flex: 1;
+  padding: 6px 0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--surface);
+  color: var(--text2);
+  border: 1.5px solid var(--border);
+  transition: all 0.15s;
+}
+.preset-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
 /* 진행도 바 */
 .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 6px; }
 .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s; }

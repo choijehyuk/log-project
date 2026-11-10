@@ -49,10 +49,12 @@ public class CharacterController {
         return ResponseEntity.ok(characterService.autoRegisterTopCharacter(memberId));
     }
 
-    // 캐릭터 장비 조회
+    // 캐릭터 장비 조회 (preset=1|2|3, 기본값 1)
     @GetMapping("/{characterId}/equipment")
-    public ResponseEntity<List<CharacterEquipmentResponse>> getEquipment(@PathVariable Long characterId) {
-        return ResponseEntity.ok(characterService.getEquipment(characterId));
+    public ResponseEntity<List<CharacterEquipmentResponse>> getEquipment(
+            @PathVariable Long characterId,
+            @RequestParam(defaultValue = "1") int preset) {
+        return ResponseEntity.ok(characterService.getEquipment(characterId, preset));
     }
 
     // 캐릭터 정보 최신화

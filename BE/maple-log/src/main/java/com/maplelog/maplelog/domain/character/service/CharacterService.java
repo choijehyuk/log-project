@@ -114,17 +114,15 @@ public class CharacterService {
     }
 
     @Transactional(readOnly = true)
-    public List<CharacterEquipmentResponse> getEquipment(Long characterId) {
+    public List<CharacterEquipmentResponse> getEquipment(Long characterId, int preset) {
         MapleCharacter character = mapleCharacterRepository.findById(characterId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 캐릭터입니다."));
         NexonEquipmentResponse equipment = nexonApiClient.getCharacterEquipment(character.getOcid());
 
         List<CharacterEquipmentResponse> result = new ArrayList<>();
-        if (equipment.getItemEquipment() != null) {
-            equipment.getItemEquipment().stream()
-                    .map(CharacterEquipmentResponse::from)
-                    .forEach(result::add);
-        }
+        equipment.getPresetEquipment(preset).stream()
+                .map(CharacterEquipmentResponse::from)
+                .forEach(result::add);
         NexonEquipmentResponse.Title title = equipment.getTitle();
         if (title != null && title.getTitleName() != null) {
             result.add(CharacterEquipmentResponse.fromTitle(title));
