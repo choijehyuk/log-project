@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { characterApi } from '../api/character'
 import { scheduleApi } from '../api/schedule'
+import { useAuth } from '../store/AuthContext'
 import type { CharacterResponse } from '../types/character'
 import type { BossContentRecord, CharacterScheduleResponse, ContentRecord } from '../types/schedule'
 
@@ -62,6 +63,9 @@ function ContentSection({ title, contents }: { title: string; contents: ContentR
 }
 
 export default function SchedulePage() {
+  const { authType } = useAuth()
+  const isNicknameUser = authType === 'NICKNAME'
+
   const [characters, setCharacters] = useState<CharacterResponse[]>([])
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [schedule, setSchedule] = useState<CharacterScheduleResponse | null>(null)
@@ -118,6 +122,13 @@ export default function SchedulePage() {
     <div className="page">
       <h1 className="page-header">스케줄</h1>
 
+      {isNicknameUser && (
+        <div className="notice-banner">
+          닉네임 로그인은 스케줄 동기화를 지원하지 않습니다.
+          API Key 또는 Nexon 로그인이 필요합니다.
+        </div>
+      )}
+
       {charError && <p className="error-text">{charError}</p>}
 
       {characters.length > 0 && (
@@ -161,9 +172,19 @@ export default function SchedulePage() {
               넥슨 API에서 스케줄을 가져옵니다.
             </p>
           )}
-          <button type="button" className="btn btn-primary" onClick={handleSync}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleSync}
+            disabled={isNicknameUser || syncing}
+          >
             지금 동기화하기
           </button>
+          {isNicknameUser && (
+            <p style={{ fontSize: 12, color: 'var(--text2)', marginTop: 8 }}>
+              설정에서 로그인 방식을 변경하세요.
+            </p>
+          )}
         </div>
       )}
     </div>

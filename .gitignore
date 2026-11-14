@@ -17,7 +17,7 @@ BE/maple-log/HELP.md
 BE/maple-log/.classpath
 BE/maple-log/.project
 BE/maple-log/.settings/
-BE/maple-log/src/main/resources/application.properties
+BE/maple-log/src/main/resources/application-local.properties
 
 # Node / React
 FE/maple-log/node_modules/

@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -89,8 +90,12 @@ public class AuthService {
                     .header("x-nxopen-api-key", apiKey)
                     .retrieve()
                     .toBodilessEntity();
+        } catch (RestClientResponseException e) {
+            // Nexon이 4xx/5xx를 반환 → API 키가 유효하지 않음
+            throw new IllegalArgumentException("유효하지 않은 API 키입니다.");
         } catch (Exception e) {
-            throw new NexonApiException(401, "유효하지 않은 API 키입니다.");
+            // 네트워크 오류 등 → 502
+            throw new NexonApiException(502, "Nexon API 서버에 접근할 수 없습니다.");
         }
     }
 

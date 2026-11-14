@@ -161,7 +161,11 @@ public class NexonApiClient {
                 .retrieve()
                 .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
                         (req, res) -> {
-                            throw new NexonApiException(res.getStatusCode().value(), "스케줄 정보 조회 실패");
+                            int code = res.getStatusCode().value();
+                            if (code == 403) {
+                                throw new IllegalArgumentException("스케줄은 본인 계정의 캐릭터만 동기화할 수 있습니다. 해당 캐릭터가 로그인한 계정 소속인지 확인하세요.");
+                            }
+                            throw new NexonApiException(code, "스케줄 정보 조회 실패 (Nexon API " + code + ")");
                         })
                 .body(NexonScheduleResponse.class);
 

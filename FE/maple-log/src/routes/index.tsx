@@ -5,14 +5,14 @@ import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
 import LogPage from '../pages/LogPage'
 import NotFoundPage from '../pages/NotFoundPage'
-import OAuthCallbackPage from '../pages/OAuthCallbackPage'
+import OAuthResultPage from '../pages/OAuthResultPage'
 import SchedulePage from '../pages/SchedulePage'
 import SettingsPage from '../pages/SettingsPage'
 import ProtectedRoute from './ProtectedRoute'
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
-  { path: '/oauth/callback', element: <OAuthCallbackPage /> },
+  { path: '/oauth/result', element: <OAuthResultPage /> },
   {
     element: <Layout />,
     children: [

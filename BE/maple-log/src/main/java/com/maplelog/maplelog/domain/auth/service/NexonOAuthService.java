@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -56,15 +59,17 @@ public class NexonOAuthService {
     }
 
     private NexonTokenResponse exchangeCodeForToken(String code) {
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
+        form.add("grant_type", "authorization_code");
+        form.add("client_id", oAuthProperties.getClientId());
+        form.add("client_secret", oAuthProperties.getClientSecret());
+        form.add("redirect_uri", oAuthProperties.getRedirectUri());
+        form.add("code", code);
+
         Map response = restClient.post()
                 .uri(oAuthProperties.getTokenUri())
-                .body(Map.of(
-                        "grant_type", "authorization_code",
-                        "client_id", oAuthProperties.getClientId(),
-                        "client_secret", oAuthProperties.getClientSecret(),
-                        "redirect_uri", oAuthProperties.getRedirectUri(),
-                        "code", code
-                ))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(form)
                 .retrieve()
                 .body(Map.class);
 

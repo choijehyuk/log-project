@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { type FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { authApi } from '../api/auth'
 import { characterApi } from '../api/character'
 import { useAuth } from '../store/AuthContext'
 
@@ -27,6 +28,18 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [step, setStep] = useState<'idle' | 'login' | 'registering'>('idle')
+
+  const handleNexonOAuth = async () => {
+    setError('')
+    setLoading(true)
+    try {
+      const { data } = await authApi.getNexonLoginUrl()
+      window.location.href = data.loginUrl
+    } catch {
+      setError('넥슨 로그인 URL을 가져오지 못했습니다.')
+      setLoading(false)
+    }
+  }
 
   const handleNicknameLogin = async (e: FormEvent) => {
     e.preventDefault()
@@ -90,7 +103,17 @@ export default function LoginPage() {
       </div>
 
       <div className="login-card">
-        <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+        <button
+          type="button"
+          className="btn btn-nexon"
+          onClick={handleNexonOAuth}
+          disabled={loading}
+          style={{ marginBottom: 12 }}
+        >
+          넥슨 계정으로 로그인
+        </button>
+        <div className="login-divider">또는</div>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 16, marginTop: 12 }}>
           <button
             type="button"
             className={`btn ${mode === 'nickname' ? 'btn-primary' : 'btn-secondary'}`}

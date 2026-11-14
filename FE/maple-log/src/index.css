@@ -313,6 +313,29 @@ body {
 .chart-wrap { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
 .chart-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
 
+/* 성장 기록 헤더 */
+.growth-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.record-btn-wrap { display: flex; align-items: center; gap: 10px; }
+.record-msg { font-size: 12px; }
+.record-msg.ok { color: #4ecca3; }
+.record-msg.err { color: var(--accent2); }
+
+/* 성장 요약 카드 */
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.summary-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.summary-label { font-size: 11px; color: var(--text2); }
+.summary-value { font-size: 18px; font-weight: 700; line-height: 1; }
+.summary-gain { font-size: 12px; }
+.summary-gain.pos { color: #4ecca3; }
+.summary-gain.neg { color: var(--accent2); }
+
 /* 기간 필터 */
 .period-filter { display: flex; gap: 8px; margin-bottom: 16px; }
 .period-btn {
@@ -409,6 +432,7 @@ body {
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-secondary { background: var(--card); color: var(--text); margin-top: 4px; }
 .btn-danger { background: #c0392b; color: #fff; }
+.btn-nexon { background: #ef6c00; color: #fff; }
 
 /* 로그인 페이지 */
 .login-page {
@@ -482,6 +506,18 @@ body {
   text-align: center;
 }
 .empty-sync .btn { margin-top: 8px; }
+
+/* 기능 제한 안내 배너 */
+.notice-banner {
+  background: rgba(240, 140, 0, 0.12);
+  border: 1px solid rgba(240, 140, 0, 0.4);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
 
 /* error */
 .error-text { color: #e74c3c; font-size: 14px; margin-top: 8px; text-align: center; }

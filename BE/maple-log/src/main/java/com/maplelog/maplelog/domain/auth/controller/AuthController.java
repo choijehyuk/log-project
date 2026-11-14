@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,10 +30,17 @@ public class AuthController {
         return ResponseEntity.ok(new OAuthLoginUrlResponse(nexonOAuthService.buildLoginUrl()));
     }
 
-    // 넥슨 OAuth 콜백 처리
+    // 넥슨 OAuth 콜백 처리 — 토큰 발급 후 FE로 리다이렉트
     @GetMapping("/oauth/nexon/callback")
-    public ResponseEntity<AuthResponse> oauthCallback(@RequestParam String code) {
-        return ResponseEntity.ok(nexonOAuthService.processCallback(code));
+    public ResponseEntity<Void> oauthCallback(@RequestParam String code) {
+        AuthResponse auth = nexonOAuthService.processCallback(code);
+        URI redirectUri = UriComponentsBuilder.fromUriString("http://localhost:5173/oauth/result")
+                .queryParam("accessToken", auth.getAccessToken())
+                .queryParam("refreshToken", auth.getRefreshToken())
+                .queryParam("nickname", auth.getNickname())
+                .queryParam("authType", auth.getAuthType())
+                .build().toUri();
+        return ResponseEntity.status(302).location(redirectUri).build();
     }
 
     // 닉네임으로 로그인 (Nexon API 조회 후 캐릭터 존재 여부 확인)
