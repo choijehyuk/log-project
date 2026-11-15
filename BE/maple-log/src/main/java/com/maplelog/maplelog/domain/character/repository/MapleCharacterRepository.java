@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface MapleCharacterRepository extends JpaRepository<MapleCharacter, Long> {
     List<MapleCharacter> findAllByMemberId(Long memberId);
+    List<MapleCharacter> findAllByMemberIdOrderBySortOrderAsc(Long memberId);
+    int countByMemberId(Long memberId);
     Optional<MapleCharacter> findByMemberIdAndIsMainTrue(Long memberId);
     Optional<MapleCharacter> findByMemberIdAndOcid(Long memberId, String ocid);
     boolean existsByMemberIdAndOcid(Long memberId, String ocid);

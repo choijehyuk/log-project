@@ -4,6 +4,7 @@ import GrowthPage from '../pages/GrowthPage'
 import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
 import LogPage from '../pages/LogPage'
+import NewsPage from '../pages/NewsPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import OAuthResultPage from '../pages/OAuthResultPage'
 import SchedulePage from '../pages/SchedulePage'
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
           { path: '/schedule', element: <SchedulePage /> },
           { path: '/growth', element: <GrowthPage /> },
           { path: '/log', element: <LogPage /> },
+          { path: '/news', element: <NewsPage /> },
           { path: '/settings', element: <SettingsPage /> },
         ],
       },

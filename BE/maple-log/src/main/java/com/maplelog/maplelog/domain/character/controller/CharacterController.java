@@ -89,4 +89,14 @@ public class CharacterController {
         characterService.deleteCharacter(memberId, characterId);
         return ResponseEntity.noContent().build();
     }
+
+    // 캐릭터 순서 변경
+    @PatchMapping("/me/order")
+    public ResponseEntity<Void> reorderCharacters(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody List<Long> orderedIds) {
+        Long memberId = Long.valueOf(userDetails.getUsername());
+        characterService.reorderCharacters(memberId, orderedIds);
+        return ResponseEntity.noContent().build();
+    }
 }

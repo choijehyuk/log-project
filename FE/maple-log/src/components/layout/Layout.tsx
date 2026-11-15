@@ -39,10 +39,18 @@ const SettingsIcon = ({ active }: { active: boolean }) => (
   </svg>
 )
 
+const NewsIcon = ({ active }: { active: boolean }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.5 : 1.8} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2" />
+    <path d="M18 14h-8M15 18h-5M10 6h8v4h-8z" />
+  </svg>
+)
+
 const tabs = [
   { path: '/', label: '홈', Icon: HomeIcon },
   { path: '/schedule', label: '스케줄', Icon: ScheduleIcon },
   { path: '/growth', label: '성장', Icon: GrowthIcon },
+  { path: '/news', label: '소식', Icon: NewsIcon },
   { path: '/log', label: '로그', Icon: LogIcon },
   { path: '/settings', label: '설정', Icon: SettingsIcon },
 ]

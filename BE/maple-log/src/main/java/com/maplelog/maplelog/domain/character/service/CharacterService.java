@@ -23,6 +23,8 @@ import org.springframework.web.client.RestClientException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -61,6 +63,7 @@ public class CharacterService {
                 .map(CharacterResponse::from)
                 .orElseGet(() -> {
                     CharacterBasicResponse basic = nexonApiClient.getCharacterBasic(ocid);
+                    int nextOrder = mapleCharacterRepository.countByMemberId(memberId);
                     MapleCharacter character = MapleCharacter.builder()
                             .member(member)
                             .ocid(ocid)
@@ -69,6 +72,7 @@ public class CharacterService {
                             .level(basic.getCharacterLevel())
                             .world(basic.getWorldName())
                             .characterImage(basic.getCharacterImage())
+                            .sortOrder(nextOrder)
                             .build();
                     return CharacterResponse.from(mapleCharacterRepository.save(character));
                 });
@@ -95,9 +99,22 @@ public class CharacterService {
 
     @Transactional(readOnly = true)
     public List<CharacterResponse> getMyCharacters(Long memberId) {
-        return mapleCharacterRepository.findAllByMemberId(memberId).stream()
+        return mapleCharacterRepository.findAllByMemberIdOrderBySortOrderAsc(memberId).stream()
                 .map(CharacterResponse::from)
                 .toList();
+    }
+
+    @Transactional
+    public void reorderCharacters(Long memberId, List<Long> orderedIds) {
+        List<MapleCharacter> characters = mapleCharacterRepository.findAllByMemberId(memberId);
+        Map<Long, MapleCharacter> charMap = characters.stream()
+                .collect(Collectors.toMap(MapleCharacter::getId, c -> c));
+
+        for (int i = 0; i < orderedIds.size(); i++) {
+            MapleCharacter c = charMap.get(orderedIds.get(i));
+            if (c == null) throw new IllegalArgumentException("잘못된 캐릭터 ID: " + orderedIds.get(i));
+            c.setSortOrder(i);
+        }
     }
 
     @Transactional

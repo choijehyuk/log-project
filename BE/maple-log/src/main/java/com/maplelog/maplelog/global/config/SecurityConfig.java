@@ -33,6 +33,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/characters/me", "/api/characters/me/**").authenticated()
                         // 인증 없이 접근 가능
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/admin/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/notice", "/api/notice/**", "/api/ranking").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/characters/search",
                                 "/api/characters/{characterId}",

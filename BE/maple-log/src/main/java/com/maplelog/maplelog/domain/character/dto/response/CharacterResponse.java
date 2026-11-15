@@ -15,6 +15,7 @@ public class CharacterResponse {
     private String world;
     private String characterImage;
     private boolean isMain;
+    private int sortOrder;
 
     public static CharacterResponse from(MapleCharacter character) {
         return CharacterResponse.builder()
@@ -25,6 +26,7 @@ public class CharacterResponse {
                 .world(character.getWorld())
                 .characterImage(character.getCharacterImage())
                 .isMain(character.isMain())
+                .sortOrder(character.getSortOrder())
                 .build();
     }
 }

@@ -41,9 +41,12 @@ public class MapleCharacter extends BaseEntity {
     @Column(nullable = false)
     private boolean isMain = false;
 
+    @Column(nullable = false)
+    private int sortOrder = 0;
+
     @Builder
     public MapleCharacter(Member member, String ocid, String characterName, String characterClass,
-                          int level, String world, String characterImage) {
+                          int level, String world, String characterImage, int sortOrder) {
         this.member = member;
         this.ocid = ocid;
         this.characterName = characterName;
@@ -52,6 +55,7 @@ public class MapleCharacter extends BaseEntity {
         this.world = world;
         this.characterImage = characterImage;
         this.isMain = false;
+        this.sortOrder = sortOrder;
     }
 
     public void update(String characterClass, int level, String world, String characterImage) {
@@ -63,5 +67,9 @@ public class MapleCharacter extends BaseEntity {
 
     public void setMain(boolean isMain) {
         this.isMain = isMain;
+    }
+
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

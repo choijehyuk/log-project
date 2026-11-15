@@ -10,4 +10,5 @@ export const characterApi = {
   getMine: () => apiClient.get<CharacterResponse[]>('/characters/me'),
   setMain: (characterId: number) => apiClient.patch<CharacterResponse>(`/characters/me/${characterId}/main`),
   remove: (characterId: number) => apiClient.delete<void>(`/characters/${characterId}`),
+  reorder: (orderedIds: number[]) => apiClient.patch<void>('/characters/me/order', orderedIds),
 }
