@@ -14,7 +14,7 @@ function resolveLoginError(err: unknown): string {
     if (status === 404 || status === 405) return '서버가 최신 코드로 재시작되지 않았습니다.'
     const msg = err.response.data?.error
     if (msg) return msg
-    if (status === 502) return '넥슨 API에서 캐릭터를 찾을 수 없습니다.'
+    if (status === 502) return err.response.data?.error || '넥슨 API에 연결할 수 없습니다. 네트워크를 확인해주세요.'
   }
   return '알 수 없는 오류가 발생했습니다.'
 }

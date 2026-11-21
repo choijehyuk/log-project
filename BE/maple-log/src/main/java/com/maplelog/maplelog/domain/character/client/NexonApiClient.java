@@ -20,7 +20,7 @@ public class NexonApiClient {
     private static final String CHARACTER_LIST_PATH = "/maplestory/v1/character/list";
     private static final String CHARACTER_BASIC_PATH = "/maplestory/v1/character/basic";
     private static final String CHARACTER_STAT_PATH = "/maplestory/v1/character/stat";
-    private static final String CHARACTER_SCHEDULE_PATH = "/maplestory/v1/character/schedule";
+    private static final String CHARACTER_SCHEDULE_PATH = "/maplestory/v1/scheduler/character-state";
     private static final String CHARACTER_EQUIPMENT_PATH = "/maplestory/v1/character/item-equipment";
     private static final String CHARACTER_ANDROID_PATH = "/maplestory/v1/character/android-equipment";
 
@@ -150,12 +150,11 @@ public class NexonApiClient {
     }
 
     // 유저 본인의 API키 또는 OAuth 토큰으로 스케줄 조회
-    public NexonScheduleResponse getCharacterSchedule(String ocid, String date, String userApiKey) {
+    public NexonScheduleResponse getCharacterSchedule(String ocid, String userApiKey) {
         NexonScheduleResponse response = RestClient.create(nexonApiProperties.getBaseUrl()).get()
                 .uri(uriBuilder -> uriBuilder
                         .path(CHARACTER_SCHEDULE_PATH)
                         .queryParam("ocid", ocid)
-                        .queryParam("date", date)
                         .build())
                 .header("x-nxopen-api-key", userApiKey)
                 .retrieve()

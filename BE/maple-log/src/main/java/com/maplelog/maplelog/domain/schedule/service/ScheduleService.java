@@ -14,14 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
-
-    private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final NexonApiClient nexonApiClient;
     private final CharacterScheduleRepository scheduleRepository;
@@ -30,11 +28,10 @@ public class ScheduleService {
 
     @Transactional
     public void syncSchedule(MapleCharacter character, String userApiKey) {
-        String today = LocalDate.now().format(DATE_FMT);
         NexonScheduleResponse nexonResponse =
-                nexonApiClient.getCharacterSchedule(character.getOcid(), today, userApiKey);
+                nexonApiClient.getCharacterSchedule(character.getOcid(), userApiKey);
 
-        LocalDate scheduleDate = LocalDate.parse(nexonResponse.getDate(), DATE_FMT);
+        LocalDate scheduleDate = OffsetDateTime.parse(nexonResponse.getDate()).toLocalDate();
 
         scheduleRepository.findByCharacterIdAndScheduleDate(character.getId(), scheduleDate)
                 .ifPresentOrElse(
