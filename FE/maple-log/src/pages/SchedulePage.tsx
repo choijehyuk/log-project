@@ -190,15 +190,39 @@ export default function SchedulePage() {
 
   useEffect(() => {
     if (selectedId === null) return
-    setSchedLoading(true)
-    setSchedule(null)
-    setNoData(false)
-    setSyncError('')
-    scheduleApi.getToday(selectedId)
-      .then(({ data }) => setSchedule(data))
-      .catch(() => setNoData(true))
-      .finally(() => setSchedLoading(false))
-  }, [selectedId])
+    let cancelled = false
+
+    const load = async () => {
+      setSchedLoading(true)
+      setSchedule(null)
+      setNoData(false)
+      setSyncError('')
+      try {
+        const { data } = await scheduleApi.getToday(selectedId)
+        if (!cancelled) setSchedule(data)
+      } catch {
+        if (isNicknameUser) {
+          if (!cancelled) setNoData(true)
+        } else {
+          try {
+            const { data } = await scheduleApi.sync(selectedId)
+            if (!cancelled) setSchedule(data)
+          } catch (err: unknown) {
+            if (!cancelled) {
+              const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error
+              setSyncError(msg ?? 'Nexon API 오류가 발생했습니다.')
+              setNoData(true)
+            }
+          }
+        }
+      } finally {
+        if (!cancelled) setSchedLoading(false)
+      }
+    }
+
+    load()
+    return () => { cancelled = true }
+  }, [selectedId, isNicknameUser])
 
   const handleSync = async () => {
     if (selectedId === null) return
